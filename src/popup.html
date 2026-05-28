@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生词提取器</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>生词提取器</h1>
+      <p class="subtitle">一键提取网页英文单词</p>
+    </header>
+
+    <main>
+      <!-- 操作按钮 -->
+      <div class="actions">
+        <button id="extractBtn" class="btn btn-primary">
+          <span class="btn-icon">📖</span>
+          提取单词
+        </button>
+      </div>
+
+      <!-- 统计信息 -->
+      <div id="stats" class="stats hidden">
+        <span id="totalCount">共 <strong>0</strong> 个单词</span>
+      </div>
+
+      <!-- 预览区域 -->
+      <div id="preview" class="preview hidden">
+        <div class="preview-header">
+          <span>单词预览（显示前 100 个）</span>
+        </div>
+        <div id="wordList" class="word-list"></div>
+      </div>
+
+      <!-- 导出操作 -->
+      <div id="exportActions" class="export-actions hidden">
+        <button id="copyBtn" class="btn btn-secondary">
+          <span class="btn-icon">📋</span>
+          复制全部
+        </button>
+        <button id="downloadBtn" class="btn btn-secondary">
+          <span class="btn-icon">💾</span>
+          下载 TXT
+        </button>
+      </div>
+
+      <!-- 提示信息 -->
+      <div id="message" class="message hidden"></div>
+    </main>
+
+    <footer>
+      <p class="footer-text">用于「不背单词」APP 导入</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
