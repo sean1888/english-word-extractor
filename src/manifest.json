@@ -3,7 +3,7 @@
   "name": "生词提取器",
   "version": "1.0.0",
   "description": "一键提取网页英文单词，用于词汇背诵",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -17,5 +17,6 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "options_page": "options.html"
 }

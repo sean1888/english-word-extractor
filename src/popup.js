@@ -51,7 +51,6 @@ function updateStats(count) {
  * @param {string[]} words - 单词数组
  */
 function updatePreview(words) {
-  // 只显示前 100 个单词
   const displayWords = words.slice(0, 100);
 
   elements.wordList.innerHTML = displayWords
@@ -65,13 +64,9 @@ function updatePreview(words) {
  * 提取单词的核心函数（将注入到页面执行）
  */
 function extractWordsInPage() {
-  // 单词匹配模式：长度 >= 3 的英文字母组合
   const WORD_PATTERN = /[a-zA-Z]{3,}/g;
-
-  // 需要排除的标签
   const EXCLUDED_TAGS = ['script', 'style', 'noscript', 'iframe', 'svg', 'path', 'code', 'pre'];
 
-  // 从页面中提取可见文本
   function extractPageText() {
     const walker = document.createTreeWalker(
       document.body,
@@ -105,7 +100,6 @@ function extractWordsInPage() {
     return textParts.join(' ');
   }
 
-  // 从文本中提取并处理单词
   function extractWords(text) {
     const matches = text.match(WORD_PATTERN) || [];
     const uniqueWords = [...new Set(matches.map(w => w.toLowerCase()))];
@@ -126,7 +120,6 @@ function extractWordsInPage() {
  * 发送消息到 content script 提取单词
  */
 async function requestExtractWords() {
-  // 获取当前活动标签页
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   if (!tab) {
@@ -134,36 +127,41 @@ async function requestExtractWords() {
     return;
   }
 
-  // 检查是否是特殊页面（chrome:// 等）
   if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://'))) {
     showMessage('此页面不支持提取', 'error', 3000);
     return;
   }
 
-  // 设置加载状态
   elements.extractBtn.classList.add('loading');
   elements.extractBtn.disabled = true;
 
   try {
-    // 动态注入脚本并执行
     const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: extractWordsInPage
     });
 
-    // 获取执行结果
     const response = results[0].result;
 
     if (response && response.success) {
-      currentWords = response.words;
-      updateStats(response.count);
-      updatePreview(response.words);
+      // 获取已收录词汇并过滤
+      const vocabulary = await getVocabulary();
+      const filteredWords = response.words.filter(w => !vocabulary.has(w));
+      currentWords = filteredWords;
+
+      updateStats(filteredWords.length);
+      updatePreview(filteredWords);
       elements.exportActions.classList.remove('hidden');
 
-      if (response.count === 0) {
-        showMessage('当前页面未找到英文单词', 'info', 3000);
+      if (filteredWords.length === 0) {
+        showMessage('当前页面单词均已收录', 'info', 3000);
       } else {
-        showMessage(`成功提取 ${response.count} 个单词`, 'success');
+        const filteredCount = response.count - filteredWords.length;
+        if (filteredCount > 0) {
+          showMessage(`成功提取 ${filteredWords.length} 个新词（已过滤 ${filteredCount} 个）`, 'success');
+        } else {
+          showMessage(`成功提取 ${filteredWords.length} 个单词`, 'success');
+        }
       }
     } else {
       showMessage(response?.error || '提取失败', 'error', 3000);
@@ -171,7 +169,6 @@ async function requestExtractWords() {
   } catch (error) {
     showMessage('无法连接到页面，请刷新后重试', 'error', 3000);
   } finally {
-    // 移除加载状态
     elements.extractBtn.classList.remove('loading');
     elements.extractBtn.disabled = false;
   }
@@ -190,9 +187,15 @@ async function copyWords() {
 
   try {
     await navigator.clipboard.writeText(text);
-    showMessage('已复制到剪贴板', 'success');
 
-    // 按钮反馈
+    // 自动将复制的单词加入已收录词汇
+    const addedCount = await addWords(currentWords);
+    if (addedCount > 0) {
+      showMessage(`已复制到剪贴板，并收录 ${addedCount} 个新词`, 'success');
+    } else {
+      showMessage('已复制到剪贴板', 'success');
+    }
+
     elements.copyBtn.textContent = '已复制 ✓';
     setTimeout(() => {
       elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span> 复制全部';
@@ -215,11 +218,9 @@ function downloadWords() {
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
 
-  // 生成文件名：words_日期.txt
   const date = new Date().toISOString().split('T')[0];
   const filename = `words_${date}.txt`;
 
-  // 创建下载链接
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
@@ -227,13 +228,18 @@ function downloadWords() {
   document.body.appendChild(a);
   a.click();
 
-  // 清理
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  showMessage(`已下载 ${filename}`, 'success');
+  // 自动将下载的单词加入已收录词汇
+  addWords(currentWords).then(addedCount => {
+    if (addedCount > 0) {
+      showMessage(`已下载 ${filename}，并收录 ${addedCount} 个新词`, 'success');
+    } else {
+      showMessage(`已下载 ${filename}`, 'success');
+    }
+  });
 
-  // 按钮反馈
   elements.downloadBtn.textContent = '已下载 ✓';
   setTimeout(() => {
     elements.downloadBtn.innerHTML = '<span class="btn-icon">💾</span> 下载 TXT';
