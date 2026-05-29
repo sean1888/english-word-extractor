@@ -6,11 +6,12 @@
 // DOM 元素引用
 const elements = {
   extractBtn: document.getElementById('extractBtn'),
-  stats: document.getElementById('stats'),
-  totalCount: document.getElementById('totalCount'),
-  preview: document.getElementById('preview'),
+  statsSection: document.getElementById('statsSection'),
+  newCount: document.getElementById('newCount'),
+  filteredCount: document.getElementById('filteredCount'),
+  previewSection: document.getElementById('previewSection'),
   wordList: document.getElementById('wordList'),
-  exportActions: document.getElementById('exportActions'),
+  actionsSection: document.getElementById('actionsSection'),
   copyBtn: document.getElementById('copyBtn'),
   downloadBtn: document.getElementById('downloadBtn'),
   message: document.getElementById('message')
@@ -18,12 +19,10 @@ const elements = {
 
 // 当前提取的单词列表
 let currentWords = [];
+let totalExtracted = 0;
 
 /**
  * 显示消息提示
- * @param {string} text - 消息文本
- * @param {string} type - 消息类型 (success/error/info)
- * @param {number} duration - 显示时长（毫秒）
  */
 function showMessage(text, type = 'info', duration = 2000) {
   elements.message.textContent = text;
@@ -39,25 +38,24 @@ function showMessage(text, type = 'info', duration = 2000) {
 
 /**
  * 更新统计信息显示
- * @param {number} count - 单词数量
  */
-function updateStats(count) {
-  elements.totalCount.innerHTML = `共 <strong>${count}</strong> 个单词`;
-  elements.stats.classList.remove('hidden');
+function updateStats(newCount, filteredCount) {
+  elements.newCount.textContent = newCount;
+  elements.filteredCount.textContent = filteredCount;
+  elements.statsSection.classList.remove('hidden');
 }
 
 /**
  * 更新单词预览列表
- * @param {string[]} words - 单词数组
  */
 function updatePreview(words) {
-  const displayWords = words.slice(0, 100);
+  const displayWords = words.slice(0, 30);
 
   elements.wordList.innerHTML = displayWords
-    .map(word => `<span class="word-item">${word}</span>`)
+    .map(word => `<span class="word-chip">${word}</span>`)
     .join('');
 
-  elements.preview.classList.remove('hidden');
+  elements.previewSection.classList.remove('hidden');
 }
 
 /**
@@ -148,19 +146,20 @@ async function requestExtractWords() {
       const vocabulary = await getVocabulary();
       const filteredWords = response.words.filter(w => !vocabulary.has(w));
       currentWords = filteredWords;
+      totalExtracted = response.count;
 
-      updateStats(filteredWords.length);
+      updateStats(filteredWords.length, totalExtracted - filteredWords.length);
       updatePreview(filteredWords);
-      elements.exportActions.classList.remove('hidden');
+      elements.actionsSection.classList.remove('hidden');
 
       if (filteredWords.length === 0) {
         showMessage('当前页面单词均已收录', 'info', 3000);
       } else {
-        const filteredCount = response.count - filteredWords.length;
+        const filteredCount = totalExtracted - filteredWords.length;
         if (filteredCount > 0) {
-          showMessage(`成功提取 ${filteredWords.length} 个新词（已过滤 ${filteredCount} 个）`, 'success');
+          showMessage(`拾起 ${filteredWords.length} 个新词`, 'success');
         } else {
-          showMessage(`成功提取 ${filteredWords.length} 个单词`, 'success');
+          showMessage(`拾起 ${filteredWords.length} 个单词`, 'success');
         }
       }
     } else {
@@ -191,14 +190,15 @@ async function copyWords() {
     // 自动将复制的单词加入已收录词汇
     const addedCount = await addWords(currentWords);
     if (addedCount > 0) {
-      showMessage(`已复制到剪贴板，并收录 ${addedCount} 个新词`, 'success');
+      showMessage(`已复制 ${currentWords.length} 词并入袋`, 'success');
     } else {
       showMessage('已复制到剪贴板', 'success');
     }
 
-    elements.copyBtn.textContent = '已复制 ✓';
+    // 更新按钮状态
+    elements.copyBtn.innerHTML = '<span class="btn-icon">✓</span><span>已复制</span>';
     setTimeout(() => {
-      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span> 复制全部';
+      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span><span>复制全部</span>';
     }, 1500);
   } catch (error) {
     showMessage('复制失败，请重试', 'error');
@@ -234,15 +234,16 @@ function downloadWords() {
   // 自动将下载的单词加入已收录词汇
   addWords(currentWords).then(addedCount => {
     if (addedCount > 0) {
-      showMessage(`已下载 ${filename}，并收录 ${addedCount} 个新词`, 'success');
+      showMessage(`已下载并入袋 ${currentWords.length} 词`, 'success');
     } else {
       showMessage(`已下载 ${filename}`, 'success');
     }
   });
 
-  elements.downloadBtn.textContent = '已下载 ✓';
+  // 更新按钮状态
+  elements.downloadBtn.innerHTML = '<span class="btn-icon">✓</span><span>已下载</span>';
   setTimeout(() => {
-    elements.downloadBtn.innerHTML = '<span class="btn-icon">💾</span> 下载 TXT';
+    elements.downloadBtn.innerHTML = '<span class="btn-icon">💾</span><span>下载 TXT</span>';
   }, 1500);
 }
 

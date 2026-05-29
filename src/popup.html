@@ -7,55 +7,80 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>拾起这页的 <span>生词</span> ✨</h1>
+  <div class="popup-card">
+    <!-- Browser Chrome 装饰 -->
+    <div class="browser-chrome">
+      <span class="chrome-dot rose"></span>
+      <span class="chrome-dot amber"></span>
+      <span class="chrome-dot emerald"></span>
+      <div class="chrome-url">chrome-extension://生词提取器</div>
+    </div>
+
+    <!-- Header -->
+    <div class="header-section">
+      <div class="brand-tag">
+        <span class="brand-icon">✨</span>
+        <span>SHICI · PICK WORDS</span>
+      </div>
+      <h1>拾起这页的 <span class="accent">生词</span> ✨</h1>
       <p class="subtitle">从当前网页智能挑出你还不会的词</p>
-    </header>
+    </div>
 
-    <main>
-      <!-- 操作按钮 -->
-      <div class="actions">
-        <button id="extractBtn" class="btn btn-primary">
-          <span class="btn-icon">📖</span>
+    <!-- Extract Button -->
+    <div class="button-section">
+      <button id="extractBtn" class="extract-btn">
+        <div class="btn-glow"></div>
+        <span class="btn-content">
+          <span class="btn-icon">✨</span>
           拾起本页生词
-        </button>
+        </span>
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div id="statsSection" class="stats-grid hidden">
+      <div class="stat-card primary">
+        <span class="stat-label">新词</span>
+        <span id="newCount" class="stat-value">0</span>
       </div>
-
-      <!-- 统计信息 -->
-      <div id="stats" class="stats hidden">
-        <span id="totalCount">拾起 <strong>0</strong> 个新词</span>
+      <div class="stat-card secondary">
+        <span class="stat-label">已过滤</span>
+        <span id="filteredCount" class="stat-value">0</span>
       </div>
+    </div>
 
-      <!-- 预览区域 -->
-      <div id="preview" class="preview hidden">
-        <div class="preview-header">
-          <span>预览 · TOP 30</span>
-          <span>按字母序</span>
-        </div>
-        <div id="wordList" class="word-list"></div>
+    <!-- Preview -->
+    <div id="previewSection" class="preview-section hidden">
+      <div class="preview-header">
+        <span class="preview-label">预览 · TOP 30</span>
+        <span class="preview-order">按字母序</span>
       </div>
+      <div id="wordList" class="word-chips"></div>
+    </div>
 
-      <!-- 导出操作 -->
-      <div id="exportActions" class="export-actions hidden">
-        <button id="copyBtn" class="btn btn-secondary">
-          <span class="btn-icon">📋</span>
-          复制全部
-        </button>
-        <button id="downloadBtn" class="btn btn-outline">
-          <span class="btn-icon">💾</span>
-          下载 TXT
-        </button>
-      </div>
+    <!-- Actions -->
+    <div id="actionsSection" class="actions-grid hidden">
+      <button id="copyBtn" class="action-btn primary">
+        <span class="btn-icon">📋</span>
+        <span>复制全部</span>
+      </button>
+      <button id="downloadBtn" class="action-btn secondary">
+        <span class="btn-icon">💾</span>
+        <span>下载 TXT</span>
+      </button>
+    </div>
 
-      <!-- 提示信息 -->
-      <div id="message" class="message hidden"></div>
-    </main>
+    <!-- Footer -->
+    <div class="footer-section">
+      <span class="footer-note">自动入袋 · 下次不再拾取</span>
+      <a href="options.html" class="footer-link">
+        <span class="link-icon">📚</span>
+        <span>我的词袋</span>
+      </a>
+    </div>
 
-    <footer>
-      <p class="footer-text">自动入袋 · 下次不再拾取</p>
-      <a href="options.html" class="manage-link">📚 我的词袋</a>
-    </footer>
+    <!-- Message -->
+    <div id="message" class="message hidden"></div>
   </div>
 
   <script src="vocabulary.js"></script>
