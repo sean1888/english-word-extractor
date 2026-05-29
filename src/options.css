@@ -123,7 +123,6 @@ body {
 
 .word-input {
   flex: 1;
-  max-width: 200px;
   height: 40px;
   border-radius: 12px;
   background: rgba(168, 162, 158, 0.04);
@@ -181,7 +180,7 @@ body {
 }
 
 .upload-btn {
-  flex: 1;
+  width: 90px;
   height: 40px;
   border-radius: 12px;
   background: #fff;
