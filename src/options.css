@@ -32,6 +32,12 @@ body {
   background: linear-gradient(to bottom right, rgba(244, 63, 94, 0.06), rgba(251, 146, 60, 0.04), rgba(251, 191, 36, 0.03));
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .brand-tag {
   display: flex;
   align-items: center;
@@ -45,14 +51,29 @@ body {
   font-size: 12px;
 }
 
+.back-btn {
+  font-size: 11px;
+  color: #f43f5e;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: all 0.15s;
+}
+
+.back-btn:hover {
+  background: rgba(244, 63, 94, 0.1);
+}
+
 .stats-row {
   margin-top: 8px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
 }
-
-.stats-main {}
 
 .stats-number {
   font-size: 36px;
@@ -122,8 +143,8 @@ body {
 }
 
 .word-input {
-  flex: 1;
-  min-width: 180px;
+  /* flex: 1; */
+  min-width: 200px;
   height: 40px;
   border-radius: 12px;
   background: rgba(168, 162, 158, 0.04);
@@ -144,7 +165,7 @@ body {
 }
 
 .icon-btn {
-  width: 40px;
+  width: 60px;
   height: 40px;
   border-radius: 12px;
   border: none;
