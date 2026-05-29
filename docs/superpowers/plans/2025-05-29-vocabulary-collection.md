@@ -1,6 +1,6 @@
 # 已收录词汇功能实现计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 实现「已收录词汇」功能，统一管理已掌握和已提取过的单词，后续提取时自动过滤。
 
@@ -30,7 +30,7 @@
 **Files:**
 - Create: `src/vocabulary.js`
 
-- [ ] **Step 1: 创建 vocabulary.js 文件**
+- [x] **Step 1: 创建 vocabulary.js 文件**
 
 创建词汇存储的核心模块，提供 CRUD 操作。
 
@@ -165,7 +165,7 @@ function parseWordsFromText(text) {
 }
 ```
 
-- [ ] **Step 2: 验证模块可加载**
+- [x] **Step 2: 验证模块可加载**
 
 在 Chrome 中重新加载扩展，确认无语法错误（扩展管理页面应无错误提示）。
 
@@ -177,7 +177,7 @@ function parseWordsFromText(text) {
 - Create: `src/options.html`
 - Create: `src/options.css`
 
-- [ ] **Step 1: 创建 options.html**
+- [x] **Step 1: 创建 options.html**
 
 ```html
 <!DOCTYPE html>
@@ -258,7 +258,7 @@ function parseWordsFromText(text) {
 </html>
 ```
 
-- [ ] **Step 2: 创建 options.css**
+- [x] **Step 2: 创建 options.css**
 
 ```css
 /* Options 页面样式 */
@@ -534,7 +534,7 @@ header .subtitle {
 }
 ```
 
-- [ ] **Step 3: 验证页面可加载**
+- [x] **Step 3: 验证页面可加载**
 
 创建一个空的 options.js 文件先，确保页面可加载无报错：
 
@@ -549,7 +549,7 @@ header .subtitle {
 **Files:**
 - Modify: `src/options.js`
 
-- [ ] **Step 1: 实现页面初始化和消息提示**
+- [x] **Step 1: 实现页面初始化和消息提示**
 
 ```javascript
 /**
@@ -634,7 +634,7 @@ async function initPage() {
 initPage();
 ```
 
-- [ ] **Step 2: 实现添加单个词汇功能**
+- [x] **Step 2: 实现添加单个词汇功能**
 
 ```javascript
 /**
@@ -670,7 +670,7 @@ elements.addInput.addEventListener('keypress', (e) => {
 });
 ```
 
-- [ ] **Step 3: 实现导入文本功能**
+- [x] **Step 3: 实现导入文本功能**
 
 ```javascript
 /**
@@ -702,7 +702,7 @@ async function handleImportText() {
 elements.importTextBtn.addEventListener('click', handleImportText);
 ```
 
-- [ ] **Step 4: 实现文件导入功能**
+- [x] **Step 4: 实现文件导入功能**
 
 ```javascript
 /**
@@ -740,7 +740,7 @@ async function handleImportFile(event) {
 elements.importFileBtn.addEventListener('change', handleImportFile);
 ```
 
-- [ ] **Step 5: 实现删除单个词汇功能**
+- [x] **Step 5: 实现删除单个词汇功能**
 
 ```javascript
 /**
@@ -762,7 +762,7 @@ elements.wordList.addEventListener('click', (e) => {
 });
 ```
 
-- [ ] **Step 6: 实现导出备份功能**
+- [x] **Step 6: 实现导出备份功能**
 
 ```javascript
 /**
@@ -800,7 +800,7 @@ async function handleExport() {
 elements.exportBtn.addEventListener('click', handleExport);
 ```
 
-- [ ] **Step 7: 实现清空全部功能**
+- [x] **Step 7: 实现清空全部功能**
 
 ```javascript
 /**
@@ -831,11 +831,11 @@ async function handleClear() {
 elements.clearBtn.addEventListener('click', handleClear);
 ```
 
-- [ ] **Step 8: 合并完整 options.js**
+- [x] **Step 8: 合并完整 options.js**
 
 将所有步骤的代码合并到 `src/options.js` 文件。
 
-- [ ] **Step 9: 验证 Options 页面功能**
+- [x] **Step 9: 验证 Options 页面功能**
 
 在 Chrome 中重新加载扩展：
 1. 进入扩展管理页面，点击扩展详情
@@ -849,7 +849,7 @@ elements.clearBtn.addEventListener('click', handleClear);
 **Files:**
 - Modify: `src/manifest.json`
 
-- [ ] **Step 1: 添加 options_page 配置**
+- [x] **Step 1: 添加 options_page 配置**
 
 在 manifest.json 中添加 options_page 配置：
 
@@ -880,7 +880,7 @@ elements.clearBtn.addEventListener('click', handleClear);
 
 注意：同时添加了 `"storage"` 权限。
 
-- [ ] **Step 2: 验证配置生效**
+- [x] **Step 2: 验证配置生效**
 
 重新加载扩展，确认：
 1. 扩展详情页显示「扩展程序选项」链接
@@ -895,7 +895,7 @@ elements.clearBtn.addEventListener('click', handleClear);
 - Modify: `src/popup.css`
 - Modify: `src/popup.js`
 
-- [ ] **Step 1: 在 popup.html 中添加管理链接**
+- [x] **Step 1: 在 popup.html 中添加管理链接**
 
 在 footer 中添加链接：
 
@@ -980,7 +980,7 @@ elements.clearBtn.addEventListener('click', handleClear);
 </html>
 ```
 
-- [ ] **Step 2: 在 popup.css 中添加链接样式**
+- [x] **Step 2: 在 popup.css 中添加链接样式**
 
 ```css
 /* Footer */
@@ -1011,7 +1011,7 @@ footer {
 }
 ```
 
-- [ ] **Step 3: 修改 popup.js 添加过滤逻辑**
+- [x] **Step 3: 修改 popup.js 添加过滤逻辑**
 
 在 `requestExtractWords` 函数中，获取返回结果后添加过滤逻辑：
 
@@ -1097,7 +1097,7 @@ async function requestExtractWords() {
 }
 ```
 
-- [ ] **Step 4: 修改下载功能添加自动收录**
+- [x] **Step 4: 修改下载功能添加自动收录**
 
 修改 `downloadWords` 函数，下载后自动将单词加入已收录词汇：
 
@@ -1145,7 +1145,7 @@ function downloadWords() {
 }
 ```
 
-- [ ] **Step 5: 同样修改复制功能添加自动收录**
+- [x] **Step 5: 同样修改复制功能添加自动收录**
 
 ```javascript
 async function copyWords() {
@@ -1178,7 +1178,7 @@ async function copyWords() {
 }
 ```
 
-- [ ] **Step 6: 验证 Popup 功能**
+- [x] **Step 6: 验证 Popup 功能**
 
 重新加载扩展，测试：
 1. popup 底部显示「管理已收录词汇」链接
@@ -1191,7 +1191,7 @@ async function copyWords() {
 
 ### Task 6: 最终测试与清理
 
-- [ ] **Step 1: 完整功能测试**
+- [x] **Step 1: 完整功能测试**
 
 按用户流程测试完整链路：
 1. 首次使用，添加一些已掌握的词汇
@@ -1203,7 +1203,7 @@ async function copyWords() {
 7. 清空词汇
 8. 导入备份文件恢复
 
-- [ ] **Step 2: 更新 CLAUDE.md**
+- [x] **Step 2: 更新 CLAUDE.md**
 
 更新项目文档，添加新文件说明：
 
@@ -1215,7 +1215,7 @@ async function copyWords() {
 - `src/popup.js` - 提取逻辑，集成过滤和自动收录
 ```
 
-- [ ] **Step 3: 提交代码**
+- [x] **Step 3: 提交代码**
 
 ```bash
 git add src/
