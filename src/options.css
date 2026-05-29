@@ -123,6 +123,7 @@ body {
 
 .word-input {
   flex: 1;
+  min-width: 180px;
   height: 40px;
   border-radius: 12px;
   background: rgba(168, 162, 158, 0.04);
