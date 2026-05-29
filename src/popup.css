@@ -340,11 +340,11 @@ body {
 }
 
 .message.success {
-  background: linear-gradient(to right, rgba(244, 63, 94, 0.9), rgba(251, 146, 60, 0.9));
+  background: linear-gradient(to right, #10b981, #34d399);
 }
 
 .message.error {
-  background: rgba(220, 38, 38, 0.9);
+  background: linear-gradient(to right, #ef4444, #f87171);
 }
 
 .message.info {
