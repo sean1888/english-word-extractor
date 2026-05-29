@@ -48,7 +48,8 @@ body {
 }
 
 .brand-icon {
-  font-size: 12px;
+  width: 12px;
+  height: 12px;
 }
 
 .back-btn {
@@ -106,7 +107,8 @@ body {
 }
 
 .streak-icon {
-  font-size: 14px;
+  width: 14px;
+  height: 14px;
 }
 
 /* Progress */
