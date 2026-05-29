@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 这是一个 Chrome 扩展（Manifest V3），用于一键提取网页中的英文单词，方便导入到「不背单词」等背词 APP。项目无构建系统，源码直接作为扩展运行。
 
+## 功能亮点
+
+- **连续天数追踪**：记录用户每日使用情况，激励持续学习
+- **本周新增统计**：动态显示本周收录词汇数量，每周自动重置
+- **智能过滤**：提取时自动跳过已收录词汇，显示「词袋已有」数量
+- **时间戳存储**：每个词汇记录添加时间，删除时同步更新统计
+- **批量粘贴**：输入框支持换行/空格/逗号分隔的多词粘贴
+
 ## 开发命令
 
 ### 安装扩展
@@ -17,6 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### 调试
 - 修改代码后，在扩展管理页面点击刷新按钮重新加载
 - popup.js 的日志可在扩展弹窗打开时，通过右键弹窗 → 检查 查看
+- options.js 的日志可在扩展详情页点击「扩展程序选项」查看
 
 ## 架构
 
@@ -29,17 +38,33 @@ popup.js (点击按钮)
       → 使用 TreeWalker 遍历可见文本节点
       → 正则匹配 3+ 字母的英文单词
       → 去重、转小写、排序
-  → 结果返回 popup.js 显示
+  → 结果返回 popup.js
+    → getVocabulary() 获取已收录词汇
+    → 过滤已收录词汇，显示新词和「词袋已有」数量
 ```
 
 ## 核心文件
 
 - `src/manifest.json` - 扩展配置，声明 `activeTab`、`scripting`、`storage` 权限
-- `src/popup.js` - UI 逻辑和单词提取函数（`extractWordsInPage`），集成过滤和自动收录逻辑
-- `src/popup.html` - 弹窗界面
-- `src/popup.css` - 样式
-- `src/vocabulary.js` - 词汇存储核心模块，提供 CRUD 操作（getVocabulary, addWords, removeWord 等）
-- `src/options.html/js/css` - 已收录词汇管理页面，支持添加、导入、导出、删除、清空
+- `src/popup.js` - 弹窗 UI 逻辑、单词提取函数、过滤和自动收录逻辑
+- `src/popup.html/css` - 弹窗界面和样式（SVG 图标）
+- `src/vocabulary.js` - 词汇存储核心模块，提供 CRUD 操作和统计功能
+- `src/options.html/js/css` - 我的词袋管理页面（词汇管理 + 统计展示）
+
+## vocabulary.js 核心模块
+
+**存储结构：**
+- `collectedVocabulary`: `[{ word: 'xxx', addedAt: 'YYYY-MM-DD' }, ...]`
+- `streakData`: `{ lastDate: 'YYYY-MM-DD', streakDays: number }`
+- `weeklyData`: `{ weekStart: 'YYYY-MM-DD', weeklyCount: number }`
+
+**主要函数：**
+- `getVocabulary()` - 获取词汇 Map（word → addedAt）
+- `addWord(word)` / `addWords(words)` - 添加词汇，更新连续天数和本周统计
+- `removeWord(word)` - 删除词汇，若本周添加则减少本周计数
+- `clearVocabulary()` - 清空词汇和本周统计
+- `getStreakDays()` - 获取有效连续天数（判断是否中断）
+- `getWeeklyCount()` - 获取本周新增数量（自动判断当前周）
 
 **单词提取逻辑** (`extractWordsInPage` 函数)：
 - 使用 TreeWalker 遍历文本节点，排除 script/style/noscript 等标签
@@ -51,6 +76,7 @@ popup.js (点击按钮)
 
 - 扩展无法在 `chrome://` 和 `chrome-extension://` 页面运行
 - 修改 manifest.json 的 permissions 需要重新加载扩展
+- 删除词汇时会检查添加时间，本周添加的词汇删除后会减少本周计数
 
 ## 开发注意事项
 
