@@ -7,66 +7,85 @@
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>我的词袋</h1>
-      <p class="subtitle">拾起的词都在这里 · 下次自动跳过</p>
-    </header>
-
-    <main>
-      <!-- 统计信息 -->
-      <div class="stats">
-        <span id="totalCount">已拾起 <strong>0</strong> 个词汇</span>
+  <div class="vocab-card">
+    <!-- Header 区域 -->
+    <div class="header-section">
+      <div class="brand-tag">
+        <span class="brand-icon">📚</span>
+        <span>MY WORD POUCH · 我的词袋</span>
       </div>
-
-      <!-- 备份提醒 -->
-      <div id="backupReminder" class="reminder hidden">
-        <span class="reminder-icon">💡</span>
-        <span>已超 100 词，建议导出备份 —— 卸载扩展后数据将丢失</span>
+      <div class="stats-row">
+        <div class="stats-main">
+          <div id="totalWords" class="stats-number">0</div>
+          <div class="stats-label">已拾起词汇</div>
+        </div>
+        <div id="streakBadge" class="streak-badge hidden">
+          <span class="streak-icon">🔥</span>
+          <span id="streakDays">连续 0 天</span>
+        </div>
       </div>
-
-      <!-- 添加单个词汇 -->
-      <section class="section">
-        <h2>快速入袋</h2>
-        <div class="add-form">
-          <input type="text" id="addInput" class="input" placeholder="输入单词，回车入袋...">
-          <button id="addBtn" class="btn btn-primary">+</button>
+      <div class="progress-section">
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill" style="width: 0%"></div>
         </div>
-      </section>
-
-      <!-- 导入词汇 -->
-      <section class="section">
-        <h2>批量导入</h2>
-        <textarea id="importTextarea" class="textarea" placeholder="粘贴单词列表，支持换行/空格/逗号分隔..."></textarea>
-        <div class="import-actions">
-          <button id="importTextBtn" class="btn btn-secondary">导入文本</button>
-          <label class="btn btn-secondary file-label">
-            上传文件
-            <input type="file" id="importFileBtn" accept=".txt" hidden>
-          </label>
+        <div class="progress-labels">
+          <span id="weeklyAdd">本周新增 +0</span>
+          <span>目标 1,800 词</span>
         </div>
-      </section>
+      </div>
+    </div>
 
-      <!-- 词汇列表 -->
-      <section class="section">
-        <h2>最近拾起</h2>
-        <div id="wordList" class="word-list">
-          <p class="empty-hint">暂无词汇，开始拾词吧 ✨</p>
-        </div>
-      </section>
+    <!-- 输入区域 -->
+    <div class="input-section">
+      <input type="text" id="addInput" class="word-input" placeholder="输入单词，回车快速入袋…">
+      <button id="addBtn" class="icon-btn primary">
+        <span>+</span>
+      </button>
+      <label class="icon-btn secondary file-label">
+        <span>⬆</span>
+        <input type="file" id="importFileBtn" accept=".txt" hidden>
+      </label>
+    </div>
 
-      <!-- 导出和清空 -->
-      <section class="section actions-footer">
-        <button id="exportBtn" class="btn btn-secondary">
-          <span class="btn-icon">💾</span> 导出备份
+    <!-- 词汇列表 -->
+    <div class="list-section">
+      <div class="list-header">
+        <span class="list-label">最近拾起</span>
+        <button id="clearBtn" class="clear-btn">
+          <span class="clear-icon">🗑</span>
+          <span>清空</span>
         </button>
-        <button id="clearBtn" class="btn btn-danger">
-          <span class="btn-icon">🗑️</span> 清空全部
-        </button>
-      </section>
-    </main>
+      </div>
+      <div id="wordList" class="word-tags">
+        <p class="empty-hint">暂无词汇，开始拾词吧 ✨</p>
+      </div>
+    </div>
 
-    <!-- 提示信息 -->
+    <!-- 备份提醒 -->
+    <div id="backupReminder" class="reminder-box hidden">
+      <span class="reminder-icon">💡</span>
+      <span class="reminder-text">
+        已超 100 词，建议导出备份 ——
+        <button id="exportBtn" class="reminder-link">立即导出</button>
+      </span>
+    </div>
+
+    <!-- 导入文本弹窗 -->
+    <div id="importModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="modal-title">批量导入</span>
+          <button id="closeModal" class="modal-close">×</button>
+        </div>
+        <textarea id="importTextarea" class="import-area" placeholder="粘贴单词列表，支持换行/空格/逗号分隔..."></textarea>
+        <div class="modal-actions">
+          <button id="importTextBtn" class="modal-btn primary">导入</button>
+          <button id="cancelModal" class="modal-btn secondary">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 消息提示 -->
     <div id="message" class="message hidden"></div>
   </div>
 

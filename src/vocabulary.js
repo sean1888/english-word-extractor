@@ -4,6 +4,88 @@
  */
 
 const STORAGE_KEY = 'collectedVocabulary';
+const STREAK_KEY = 'streakData'; // { lastDate: 'YYYY-MM-DD', streakDays: number }
+
+/**
+ * 获取今日日期字符串
+ * @returns {string} YYYY-MM-DD 格式
+ */
+function getTodayDate() {
+  return new Date().toISOString().split('T')[0];
+}
+
+/**
+ * 获取连续天数数据
+ * @returns {Promise<{lastDate: string|null, streakDays: number}>}
+ */
+async function getStreakData() {
+  const result = await chrome.storage.local.get(STREAK_KEY);
+  return result[STREAK_KEY] || { lastDate: null, streakDays: 0 };
+}
+
+/**
+ * 更新连续天数（在添加词汇时调用）
+ * @returns {Promise<number>} 返回当前连续天数
+ */
+async function updateStreak() {
+  const today = getTodayDate();
+  const streakData = await getStreakData();
+
+  let newStreakDays;
+
+  if (streakData.lastDate === null) {
+    // 首次使用
+    newStreakDays = 1;
+  } else if (streakData.lastDate === today) {
+    // 今天已记录过，不增加
+    newStreakDays = streakData.streakDays;
+  } else {
+    // 检查是否是昨天
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    if (streakData.lastDate === yesterdayStr) {
+      // 连续使用
+      newStreakDays = streakData.streakDays + 1;
+    } else {
+      // 中断了，重新开始
+      newStreakDays = 1;
+    }
+  }
+
+  await chrome.storage.local.set({
+    [STREAK_KEY]: { lastDate: today, streakDays: newStreakDays }
+  });
+
+  return newStreakDays;
+}
+
+/**
+ * 获取连续天数
+ * @returns {Promise<number>}
+ */
+async function getStreakDays() {
+  const streakData = await getStreakData();
+  const today = getTodayDate();
+
+  // 如果 lastDate 不是今天或昨天，streak 已经中断
+  if (streakData.lastDate === null) {
+    return 0;
+  }
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+  // lastDate 是今天或昨天，streak 有效
+  if (streakData.lastDate === today || streakData.lastDate === yesterdayStr) {
+    return streakData.streakDays;
+  }
+
+  // 中断了
+  return 0;
+}
 
 /**
  * 获取已收录词汇（返回 Set）
@@ -36,6 +118,8 @@ async function addWord(word) {
   if (normalizedWord && !vocabulary.has(normalizedWord)) {
     vocabulary.add(normalizedWord);
     await saveVocabulary(vocabulary);
+    // 更新连续天数
+    await updateStreak();
   }
   return vocabulary.size;
 }
@@ -55,7 +139,11 @@ async function addWords(words) {
       addedCount++;
     }
   }
-  await saveVocabulary(vocabulary);
+  if (addedCount > 0) {
+    await saveVocabulary(vocabulary);
+    // 更新连续天数
+    await updateStreak();
+  }
   return addedCount;
 }
 
