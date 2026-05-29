@@ -5,6 +5,20 @@
 
 const STORAGE_KEY = 'collectedVocabulary';
 const STREAK_KEY = 'streakData'; // { lastDate: 'YYYY-MM-DD', streakDays: number }
+const WEEKLY_KEY = 'weeklyData'; // { weekStart: 'YYYY-MM-DD', weeklyCount: number }
+
+/**
+ * 获取本周起始日期（周一）
+ * @returns {string} YYYY-MM-DD 格式
+ */
+function getWeekStart() {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  return monday.toISOString().split('T')[0];
+}
 
 /**
  * 获取今日日期字符串
@@ -88,6 +102,55 @@ async function getStreakDays() {
 }
 
 /**
+ * 获取本周新增数据
+ * @returns {Promise<{weekStart: string, weeklyCount: number}>}
+ */
+async function getWeeklyData() {
+  const result = await chrome.storage.local.get(WEEKLY_KEY);
+  return result[WEEKLY_KEY] || { weekStart: getWeekStart(), weeklyCount: 0 };
+}
+
+/**
+ * 更新本周新增数量
+ * @param {number} addedCount 新增词汇数量
+ * @returns {Promise<number>} 返回本周新增总数
+ */
+async function updateWeeklyCount(addedCount) {
+  const currentWeekStart = getWeekStart();
+  const weeklyData = await getWeeklyData();
+
+  let newWeeklyCount;
+  if (weeklyData.weekStart === currentWeekStart) {
+    // 同一周，累加
+    newWeeklyCount = weeklyData.weeklyCount + addedCount;
+  } else {
+    // 新的一周，重置
+    newWeeklyCount = addedCount;
+  }
+
+  await chrome.storage.local.set({
+    [WEEKLY_KEY]: { weekStart: currentWeekStart, weeklyCount: newWeeklyCount }
+  });
+
+  return newWeeklyCount;
+}
+
+/**
+ * 获取本周新增数量
+ * @returns {Promise<number>}
+ */
+async function getWeeklyCount() {
+  const currentWeekStart = getWeekStart();
+  const weeklyData = await getWeeklyData();
+
+  // 如果是当前周，返回计数；否则返回 0
+  if (weeklyData.weekStart === currentWeekStart) {
+    return weeklyData.weeklyCount;
+  }
+  return 0;
+}
+
+/**
  * 获取已收录词汇（返回 Set）
  * @returns {Promise<Set<string>>}
  */
@@ -118,8 +181,9 @@ async function addWord(word) {
   if (normalizedWord && !vocabulary.has(normalizedWord)) {
     vocabulary.add(normalizedWord);
     await saveVocabulary(vocabulary);
-    // 更新连续天数
+    // 更新连续天数和本周新增
     await updateStreak();
+    await updateWeeklyCount(1);
   }
   return vocabulary.size;
 }
@@ -141,8 +205,9 @@ async function addWords(words) {
   }
   if (addedCount > 0) {
     await saveVocabulary(vocabulary);
-    // 更新连续天数
+    // 更新连续天数和本周新增
     await updateStreak();
+    await updateWeeklyCount(addedCount);
   }
   return addedCount;
 }

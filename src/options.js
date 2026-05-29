@@ -50,6 +50,10 @@ async function updateStats() {
   const progress = Math.min((count / 1800) * 100, 100);
   elements.progressFill.style.width = `${progress}%`;
 
+  // 本周新增
+  const weeklyCount = await getWeeklyCount();
+  elements.weeklyAdd.textContent = `本周新增 +${weeklyCount}`;
+
   // 连续天数（始终显示徽章）
   const streakDays = await getStreakDays();
   elements.streakBadge.classList.remove('hidden');
