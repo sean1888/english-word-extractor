@@ -1,5 +1,5 @@
 /**
- * 生词提取器 - Popup Script
+ * 拾词 - Popup Script
  * 负责弹窗交互逻辑
  */
 
@@ -198,7 +198,7 @@ async function copyWords() {
     // 更新按钮状态
     elements.copyBtn.innerHTML = '<span class="btn-icon">✓</span><span>已复制</span>';
     setTimeout(() => {
-      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span><span>复制全部</span>';
+      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span><span>复制并加入词袋</span>';
     }, 1500);
   } catch (error) {
     showMessage('复制失败，请重试', 'error');

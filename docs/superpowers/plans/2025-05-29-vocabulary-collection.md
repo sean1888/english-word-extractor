@@ -185,7 +185,7 @@ function parseWordsFromText(text) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>已收录词汇 - 生词提取器</title>
+  <title>已收录词汇 - 拾词</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
@@ -856,7 +856,7 @@ elements.clearBtn.addEventListener('click', handleClear);
 ```json
 {
   "manifest_version": 3,
-  "name": "生词提取器",
+  "name": "拾词",
   "version": "1.0.0",
   "description": "一键提取网页英文单词，用于词汇背诵",
   "permissions": ["activeTab", "scripting", "storage"],
@@ -867,7 +867,7 @@ elements.clearBtn.addEventListener('click', handleClear);
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_title": "生词提取器"
+    "default_title": "拾词"
   },
   "icons": {
     "16": "icons/icon16.png",
@@ -921,13 +921,12 @@ elements.clearBtn.addEventListener('click', handleClear);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生词提取器</title>
+  <title>拾词</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>生词提取器</h1>
       <p class="subtitle">一键提取网页英文单词</p>
     </header>
 
@@ -957,7 +956,7 @@ elements.clearBtn.addEventListener('click', handleClear);
       <div id="exportActions" class="export-actions hidden">
         <button id="copyBtn" class="btn btn-secondary">
           <span class="btn-icon">📋</span>
-          复制全部
+          复制并加入词袋
         </button>
         <button id="downloadBtn" class="btn btn-secondary">
           <span class="btn-icon">💾</span>
@@ -1171,7 +1170,7 @@ async function copyWords() {
     // 按钮反馈
     elements.copyBtn.textContent = '已复制 ✓';
     setTimeout(() => {
-      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span> 复制全部';
+      elements.copyBtn.innerHTML = '<span class="btn-icon">📋</span> 复制并加入词袋';
     }, 1500);
   } catch (error) {
     showMessage('复制失败，请重试', 'error');
