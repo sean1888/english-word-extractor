@@ -16,11 +16,6 @@ const elements = {
   clearBtn: document.getElementById('clearBtn'),
   backupReminder: document.getElementById('backupReminder'),
   exportBtn: document.getElementById('exportBtn'),
-  importModal: document.getElementById('importModal'),
-  closeModal: document.getElementById('closeModal'),
-  importTextarea: document.getElementById('importTextarea'),
-  importTextBtn: document.getElementById('importTextBtn'),
-  cancelModal: document.getElementById('cancelModal'),
   message: document.getElementById('message')
 };
 
@@ -100,70 +95,36 @@ async function initPage() {
 }
 
 /**
- * 添加单个词汇
+ * 添加词汇（支持单个或批量粘贴）
  */
 async function handleAddWord() {
-  const word = elements.addInput.value.trim();
+  const text = elements.addInput.value.trim();
 
-  if (!word) {
+  if (!text) {
     showMessage('请输入单词', 'error');
     return;
   }
 
-  const normalizedWord = normalizeWord(word);
-  if (!normalizedWord) {
+  // 解析输入文本（支持换行/空格/逗号分隔）
+  const words = parseWordsFromText(text);
+
+  if (words.length === 0) {
     showMessage('单词格式无效（需 3+ 字母英文）', 'error');
     return;
   }
 
-  const count = await addWord(word);
-  elements.addInput.value = '';
-  await updateStats();
-  await updateWordList();
-  showMessage(`"${normalizedWord}" 入袋成功`, 'success');
-}
-
-/**
- * 打开导入弹窗
- */
-function openImportModal() {
-  elements.importModal.classList.remove('hidden');
-  elements.importTextarea.value = '';
-  elements.importTextarea.focus();
-}
-
-/**
- * 关闭导入弹窗
- */
-function closeImportModal() {
-  elements.importModal.classList.add('hidden');
-}
-
-/**
- * 从文本导入
- */
-async function handleImportText() {
-  const text = elements.importTextarea.value.trim();
-
-  if (!text) {
-    showMessage('请输入或粘贴单词列表', 'error');
-    return;
-  }
-
-  const words = parseWordsFromText(text);
-
-  if (words.length === 0) {
-    showMessage('未找到有效单词', 'error');
-    return;
-  }
-
+  // 批量添加
   const addedCount = await addWords(words);
-  closeImportModal();
+  elements.addInput.value = '';
   await updateStats();
   await updateWordList();
 
   if (addedCount > 0) {
-    showMessage(`${addedCount} 个词汇入袋成功`, 'success');
+    if (words.length === 1) {
+      showMessage(`"${words[0]}" 入袋成功`, 'success');
+    } else {
+      showMessage(`${addedCount} 个词汇入袋成功`, 'success');
+    }
   } else {
     showMessage('词汇已存在', 'info');
   }
@@ -264,19 +225,8 @@ elements.addInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') handleAddWord();
 });
 
-// 上传文件按钮打开弹窗（改为打开导入弹窗）
-document.querySelector('.file-label').addEventListener('click', (e) => {
-  e.preventDefault();
-  openImportModal();
-});
-
+// 上传文件按钮直接触发文件选择（label 会自动触发 hidden input）
 elements.importFileBtn.addEventListener('change', handleImportFile);
-elements.importTextBtn.addEventListener('click', handleImportText);
-elements.closeModal.addEventListener('click', closeImportModal);
-elements.cancelModal.addEventListener('click', closeImportModal);
-elements.importModal.addEventListener('click', (e) => {
-  if (e.target === elements.importModal) closeImportModal();
-});
 
 elements.wordList.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete-btn')) {
