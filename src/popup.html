@@ -9,8 +9,8 @@
 <body>
   <div class="container">
     <header>
-      <h1>生词提取器</h1>
-      <p class="subtitle">一键提取网页英文单词</p>
+      <h1>拾起这页的 <span>生词</span> ✨</h1>
+      <p class="subtitle">从当前网页智能挑出你还不会的词</p>
     </header>
 
     <main>
@@ -18,19 +18,20 @@
       <div class="actions">
         <button id="extractBtn" class="btn btn-primary">
           <span class="btn-icon">📖</span>
-          提取单词
+          拾起本页生词
         </button>
       </div>
 
       <!-- 统计信息 -->
       <div id="stats" class="stats hidden">
-        <span id="totalCount">共 <strong>0</strong> 个单词</span>
+        <span id="totalCount">拾起 <strong>0</strong> 个新词</span>
       </div>
 
       <!-- 预览区域 -->
       <div id="preview" class="preview hidden">
         <div class="preview-header">
-          <span>单词预览（显示前 100 个）</span>
+          <span>预览 · TOP 30</span>
+          <span>按字母序</span>
         </div>
         <div id="wordList" class="word-list"></div>
       </div>
@@ -41,7 +42,7 @@
           <span class="btn-icon">📋</span>
           复制全部
         </button>
-        <button id="downloadBtn" class="btn btn-secondary">
+        <button id="downloadBtn" class="btn btn-outline">
           <span class="btn-icon">💾</span>
           下载 TXT
         </button>
@@ -52,8 +53,8 @@
     </main>
 
     <footer>
-      <p class="footer-text">用于「不背单词」APP 导入</p>
-      <a href="options.html" class="manage-link">管理已收录词汇</a>
+      <p class="footer-text">自动入袋 · 下次不再拾取</p>
+      <a href="options.html" class="manage-link">📚 我的词袋</a>
     </footer>
   </div>
 

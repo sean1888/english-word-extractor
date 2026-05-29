@@ -1,4 +1,4 @@
-/* 生词提取器 - Popup 样式 */
+/* Popup 样式 - 温暖奶油风格 */
 
 * {
   margin: 0;
@@ -7,32 +7,39 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  background: #fff8f3;
   min-width: 320px;
-  max-width: 400px;
+  max-width: 380px;
 }
 
 .container {
   padding: 16px;
-  color: #fff;
+  color: #1c1917;
 }
 
 /* Header */
 header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(244, 63, 94, 0.1);
 }
 
 header h1 {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
+  color: #1c1917;
   margin-bottom: 4px;
+}
+
+header h1 span {
+  color: #f43f5e;
 }
 
 header .subtitle {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #78716c;
 }
 
 /* Buttons */
@@ -43,11 +50,11 @@ header .subtitle {
   gap: 6px;
   padding: 10px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-icon {
@@ -55,28 +62,40 @@ header .subtitle {
 }
 
 .btn-primary {
-  background: #fff;
-  color: #667eea;
   width: 100%;
+  background: linear-gradient(to right, #f43f5e, #fb923c);
+  color: #fff;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 24px -8px rgba(244, 63, 94, 0.5);
 }
 
 .btn-primary:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
+  box-shadow: 0 14px 28px -8px rgba(244, 63, 94, 0.6);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.15);
+  background: #1c1917;
   color: #fff;
-  flex: 1;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #292524;
+}
+
+.btn-outline {
+  background: #fff;
+  color: #44403c;
+  border: 1px solid rgba(168, 162, 158, 0.3);
+}
+
+.btn-outline:hover {
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #f43f5e;
 }
 
 .btn-secondary:disabled {
@@ -97,40 +116,57 @@ header .subtitle {
 
 /* Stats */
 .stats {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px 12px;
-  border-radius: 6px;
+  background: linear-gradient(to bottom right, rgba(244, 63, 94, 0.08), rgba(251, 146, 60, 0.06));
+  padding: 10px 14px;
+  border-radius: 12px;
   font-size: 13px;
   text-align: center;
   margin-bottom: 12px;
+  border: 1px solid rgba(244, 63, 94, 0.12);
 }
 
 .stats strong {
-  color: #ffd700;
-  font-size: 16px;
+  color: #f43f5e;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stats-secondary {
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.stats-secondary strong {
+  color: #d97706;
 }
 
 /* Preview */
 .preview {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
+  background: linear-gradient(to bottom, rgba(244, 63, 94, 0.04), rgba(251, 146, 60, 0.03));
+  border-radius: 14px;
   overflow: hidden;
   margin-bottom: 12px;
+  border: 1px solid rgba(244, 63, 94, 0.1);
 }
 
 .preview-header {
-  background: #f5f5f5;
-  padding: 8px 12px;
-  font-size: 12px;
-  color: #666;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 14px;
+  font-size: 11px;
+  color: #f43f5e;
+  letter-spacing: 0.1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.preview-header span:last-child {
+  color: #a8a29e;
+  letter-spacing: normal;
 }
 
 .word-list {
-  padding: 12px;
-  max-height: 200px;
+  padding: 12px 14px;
+  max-height: 160px;
   overflow-y: auto;
-  color: #333;
   font-size: 13px;
   line-height: 1.8;
 }
@@ -140,72 +176,78 @@ header .subtitle {
 }
 
 .word-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgba(244, 63, 94, 0.05);
 }
 
 .word-list::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: rgba(244, 63, 94, 0.2);
   border-radius: 3px;
 }
 
 .word-item {
   display: inline-block;
-  background: #667eea;
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin: 2px;
+  background: #fff;
+  color: #44403c;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin: 3px;
   font-size: 12px;
+  border: 1px solid rgba(244, 63, 94, 0.15);
+  box-shadow: 0 2px 4px -2px rgba(244, 63, 94, 0.15);
+}
+
+.word-item:hover {
+  background: rgba(244, 63, 94, 0.05);
 }
 
 /* Message */
 .message {
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 13px;
   text-align: center;
 }
 
 .message.success {
-  background: rgba(76, 175, 80, 0.2);
-  color: #a5d6a7;
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
 }
 
 .message.error {
-  background: rgba(244, 67, 54, 0.2);
-  color: #ffcdd2;
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
 }
 
 .message.info {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(244, 63, 94, 0.08);
+  color: #f43f5e;
 }
 
 /* Footer */
 footer {
   text-align: center;
   margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(244, 63, 94, 0.1);
 }
 
 .footer-text {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 8px;
+  color: #a8a29e;
+  margin-bottom: 6px;
 }
 
 .manage-link {
-  display: block;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: #f43f5e;
   text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .manage-link:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  text-decoration: underline;
 }
 
 /* Utilities */
@@ -215,11 +257,15 @@ footer {
 
 /* Loading state */
 .btn-primary.loading {
-  opacity: 0.7;
+  opacity: 0.85;
   cursor: wait;
 }
 
-.btn-primary.loading .btn-icon::after {
-  content: "⏳";
-  margin-left: 4px;
+.btn-primary.loading .btn-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

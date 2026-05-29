@@ -3,41 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>已收录词汇 - 生词提取器</title>
+  <title>我的词袋 - 生词提取器</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>已收录词汇</h1>
-      <p class="subtitle">提取时自动排除这些词</p>
+      <h1>我的词袋</h1>
+      <p class="subtitle">拾起的词都在这里 · 下次自动跳过</p>
     </header>
 
     <main>
       <!-- 统计信息 -->
       <div class="stats">
-        <span id="totalCount">共 <strong>0</strong> 个词汇</span>
+        <span id="totalCount">已拾起 <strong>0</strong> 个词汇</span>
       </div>
 
       <!-- 备份提醒 -->
       <div id="backupReminder" class="reminder hidden">
-        <span class="reminder-icon">⚠️</span>
-        <span>建议定期导出备份，卸载扩展后数据将丢失</span>
+        <span class="reminder-icon">💡</span>
+        <span>已超 100 词，建议导出备份 —— 卸载扩展后数据将丢失</span>
       </div>
 
       <!-- 添加单个词汇 -->
       <section class="section">
-        <h2>添加词汇</h2>
+        <h2>快速入袋</h2>
         <div class="add-form">
-          <input type="text" id="addInput" class="input" placeholder="输入单词...">
-          <button id="addBtn" class="btn btn-primary">添加</button>
+          <input type="text" id="addInput" class="input" placeholder="输入单词，回车入袋...">
+          <button id="addBtn" class="btn btn-primary">+</button>
         </div>
       </section>
 
       <!-- 导入词汇 -->
       <section class="section">
-        <h2>导入词汇</h2>
-        <textarea id="importTextarea" class="textarea" placeholder="粘贴单词列表，每行一个单词..."></textarea>
+        <h2>批量导入</h2>
+        <textarea id="importTextarea" class="textarea" placeholder="粘贴单词列表，支持换行/空格/逗号分隔..."></textarea>
         <div class="import-actions">
           <button id="importTextBtn" class="btn btn-secondary">导入文本</button>
           <label class="btn btn-secondary file-label">
@@ -49,9 +49,9 @@
 
       <!-- 词汇列表 -->
       <section class="section">
-        <h2>词汇列表</h2>
+        <h2>最近拾起</h2>
         <div id="wordList" class="word-list">
-          <p class="empty-hint">暂无词汇，请添加或导入</p>
+          <p class="empty-hint">暂无词汇，开始拾词吧 ✨</p>
         </div>
       </section>
 
