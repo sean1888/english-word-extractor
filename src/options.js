@@ -50,14 +50,10 @@ async function updateStats() {
   const progress = Math.min((count / 1800) * 100, 100);
   elements.progressFill.style.width = `${progress}%`;
 
-  // 连续天数
+  // 连续天数（始终显示徽章）
   const streakDays = await getStreakDays();
-  if (streakDays > 0) {
-    elements.streakBadge.classList.remove('hidden');
-    elements.streakDays.textContent = `连续 ${streakDays} 天`;
-  } else {
-    elements.streakBadge.classList.add('hidden');
-  }
+  elements.streakBadge.classList.remove('hidden');
+  elements.streakDays.textContent = `连续 ${streakDays} 天`;
 
   // 备份提醒（超过 100 词）
   if (count >= 100) {
