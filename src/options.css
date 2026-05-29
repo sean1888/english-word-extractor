@@ -52,20 +52,23 @@ body {
 }
 
 .back-btn {
-  font-size: 11px;
-  color: #f43f5e;
-  text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.7);
-  transition: all 0.15s;
+  font-size: 11.5px;
+  color: rgba(244, 63, 94, 0.8);
+  text-decoration: none;
+  transition: color 0.15s;
+  margin-top: -4px;
 }
 
 .back-btn:hover {
-  background: rgba(244, 63, 94, 0.1);
+  color: #f43f5e;
+}
+
+.back-btn svg {
+  width: 12px;
+  height: 12px;
 }
 
 .stats-row {
