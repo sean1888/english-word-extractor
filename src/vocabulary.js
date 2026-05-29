@@ -1,6 +1,7 @@
 /**
  * 词汇存储模块
  * 使用 chrome.storage.local 存储已收录词汇
+ * 存储结构: [{ word: 'xxx', addedAt: 'YYYY-MM-DD' }, ...]
  */
 
 const STORAGE_KEY = 'collectedVocabulary';
@@ -111,21 +112,21 @@ async function getWeeklyData() {
 }
 
 /**
- * 更新本周新增数量
- * @param {number} addedCount 新增词汇数量
+ * 更新本周新增数量（增减）
+ * @param {number} delta 增减数量（正数增加，负数减少）
  * @returns {Promise<number>} 返回本周新增总数
  */
-async function updateWeeklyCount(addedCount) {
+async function updateWeeklyCount(delta) {
   const currentWeekStart = getWeekStart();
   const weeklyData = await getWeeklyData();
 
   let newWeeklyCount;
   if (weeklyData.weekStart === currentWeekStart) {
-    // 同一周，累加
-    newWeeklyCount = weeklyData.weeklyCount + addedCount;
+    // 同一周，增减
+    newWeeklyCount = Math.max(0, weeklyData.weeklyCount + delta);
   } else {
-    // 新的一周，重置
-    newWeeklyCount = addedCount;
+    // 新的一周，重置（只处理正数增加）
+    newWeeklyCount = Math.max(0, delta);
   }
 
   await chrome.storage.local.set({
@@ -151,23 +152,35 @@ async function getWeeklyCount() {
 }
 
 /**
- * 获取已收录词汇（返回 Set）
- * @returns {Promise<Set<string>>}
+ * 获取已收录词汇（返回 Map: word -> addedAt）
+ * @returns {Promise<Map<string, string>>}
  */
 async function getVocabulary() {
   const result = await chrome.storage.local.get(STORAGE_KEY);
-  const words = result[STORAGE_KEY] || [];
-  return new Set(words);
+  const items = result[STORAGE_KEY] || [];
+  const map = new Map();
+  for (const item of items) {
+    // 兼容旧数据格式（纯字符串数组）
+    if (typeof item === 'string') {
+      map.set(item, null);
+    } else {
+      map.set(item.word, item.addedAt);
+    }
+  }
+  return map;
 }
 
 /**
- * 保存词汇到存储（接收 Set 或数组）
- * @param {Set<string>|string[]} vocabulary
+ * 保存词汇到存储（接收 Map）
+ * @param {Map<string, string>} vocabulary word -> addedAt
  * @returns {Promise<void>}
  */
 async function saveVocabulary(vocabulary) {
-  const words = Array.from(vocabulary);
-  await chrome.storage.local.set({ [STORAGE_KEY]: words });
+  const items = [];
+  for (const [word, addedAt] of vocabulary) {
+    items.push({ word, addedAt: addedAt || getTodayDate() });
+  }
+  await chrome.storage.local.set({ [STORAGE_KEY]: items });
 }
 
 /**
@@ -179,7 +192,7 @@ async function addWord(word) {
   const vocabulary = await getVocabulary();
   const normalizedWord = normalizeWord(word);
   if (normalizedWord && !vocabulary.has(normalizedWord)) {
-    vocabulary.add(normalizedWord);
+    vocabulary.set(normalizedWord, getTodayDate());
     await saveVocabulary(vocabulary);
     // 更新连续天数和本周新增
     await updateStreak();
@@ -195,11 +208,12 @@ async function addWord(word) {
  */
 async function addWords(words) {
   const vocabulary = await getVocabulary();
+  const today = getTodayDate();
   let addedCount = 0;
   for (const word of words) {
     const normalizedWord = normalizeWord(word);
     if (normalizedWord && !vocabulary.has(normalizedWord)) {
-      vocabulary.add(normalizedWord);
+      vocabulary.set(normalizedWord, today);
       addedCount++;
     }
   }
@@ -219,7 +233,19 @@ async function addWords(words) {
  */
 async function removeWord(word) {
   const vocabulary = await getVocabulary();
-  vocabulary.delete(word.toLowerCase());
+  const normalizedWord = word.toLowerCase();
+  const addedAt = vocabulary.get(normalizedWord);
+
+  if (addedAt) {
+    // 检查是否本周添加
+    const currentWeekStart = getWeekStart();
+    if (addedAt >= currentWeekStart) {
+      // 本周添加的，减少本周计数
+      await updateWeeklyCount(-1);
+    }
+  }
+
+  vocabulary.delete(normalizedWord);
   await saveVocabulary(vocabulary);
   return vocabulary.size;
 }
@@ -230,6 +256,8 @@ async function removeWord(word) {
  */
 async function clearVocabulary() {
   await chrome.storage.local.set({ [STORAGE_KEY]: [] });
+  // 同时清空本周计数
+  await chrome.storage.local.set({ [WEEKLY_KEY]: { weekStart: getWeekStart(), weeklyCount: 0 } });
 }
 
 /**
@@ -247,7 +275,7 @@ async function getVocabularyCount() {
  */
 async function exportVocabulary() {
   const vocabulary = await getVocabulary();
-  return Array.from(vocabulary).sort();
+  return Array.from(vocabulary.keys()).sort();
 }
 
 /**

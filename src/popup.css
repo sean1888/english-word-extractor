@@ -217,8 +217,21 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  max-height: 156px;
-  overflow: hidden;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.word-chips::-webkit-scrollbar {
+  width: 4px;
+}
+
+.word-chips::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.word-chips::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 94, 0.2);
+  border-radius: 2px;
 }
 
 .word-chip {
@@ -314,27 +327,28 @@ body {
 /* Message */
 .message {
   position: fixed;
-  bottom: 16px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   padding: 12px 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   font-size: 13px;
   color: #fff;
   z-index: 100;
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .message.success {
-  background: #16a34a;
+  background: linear-gradient(to right, rgba(244, 63, 94, 0.9), rgba(251, 146, 60, 0.9));
 }
 
 .message.error {
-  background: #dc2626;
+  background: rgba(220, 38, 38, 0.9);
 }
 
 .message.info {
-  background: #f43f5e;
+  background: linear-gradient(to right, rgba(244, 63, 94, 0.9), rgba(251, 146, 60, 0.9));
 }
 
 /* Hidden */
