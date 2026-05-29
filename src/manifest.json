@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "拾词",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "一键提取网页英文单词，用于词汇背诵",
   "permissions": ["activeTab", "scripting", "storage"],
   "action": {
