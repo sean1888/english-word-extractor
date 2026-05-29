@@ -104,6 +104,7 @@ async function handleAddWord() {
  */
 async function handleImportText() {
   const text = elements.importTextarea.value;
+  console.log('[handleImportText] 开始导入，文本长度:', text.length);
 
   if (!text.trim()) {
     showMessage('请输入或粘贴单词列表', 'error');
@@ -111,13 +112,17 @@ async function handleImportText() {
   }
 
   const words = parseWordsFromText(text);
+  console.log('[handleImportText] 解析后有效单词数量:', words.length);
 
   if (words.length === 0) {
     showMessage('未找到有效单词', 'error');
     return;
   }
 
+  console.log('[handleImportText] 调用 addWords...');
   const addedCount = await addWords(words);
+  console.log('[handleImportText] addWords 返回新增数量:', addedCount);
+
   elements.importTextarea.value = '';
   await updateStats();
   await updateWordList();

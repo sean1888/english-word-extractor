@@ -112,17 +112,36 @@ function normalizeWord(word) {
 
 /**
  * 从文本解析单词列表
+ * 支持多种分隔符：换行、空格、逗号、分号、制表符
  * @param {string} text
  * @returns {string[]} 返回有效单词数组
  */
 function parseWordsFromText(text) {
-  const lines = text.split(/\r?\n/);
+  console.log('[parseWordsFromText] 输入文本长度:', text.length);
+  console.log('[parseWordsFromText] 输入文本前100字符:', text.substring(0, 100));
+
+  // 支持多种分隔符：换行、空格、逗号、分号、制表符
+  const tokens = text.split(/[\r\n\s,;]+/);
+  console.log('[parseWordsFromText] 分割后 tokens 数量:', tokens.length);
+  console.log('[parseWordsFromText] tokens 前10个:', tokens.slice(0, 10));
+
   const validWords = [];
-  for (const line of lines) {
-    const normalized = normalizeWord(line);
+  const invalidExamples = [];
+
+  for (const token of tokens) {
+    const normalized = normalizeWord(token);
     if (normalized) {
       validWords.push(normalized);
+    } else if (token.trim() && invalidExamples.length < 5) {
+      invalidExamples.push(token.trim());
     }
   }
+
+  console.log('[parseWordsFromText] 有效单词数量:', validWords.length);
+  console.log('[parseWordsFromText] 有效单词前10个:', validWords.slice(0, 10));
+  if (invalidExamples.length > 0) {
+    console.log('[parseWordsFromText] 无效示例:', invalidExamples);
+  }
+
   return validWords;
 }
